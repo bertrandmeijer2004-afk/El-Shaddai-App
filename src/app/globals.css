@@ -1,0 +1,201 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ---------- Token warna (kanal RGB, dipakai tailwind.config.ts) ---------- */
+:root {
+  --bg: 255 255 255;
+  --fg: 10 10 10;
+  --muted: 82 82 91; /* kontras 7.6:1 di atas putih */
+  --surface: 240 248 254; /* biru sangat muda untuk panel & placeholder */
+  --card: 255 255 255;
+  --line: 214 224 234;
+  --primary: 168 216 245; /* #A8D8F5 */
+  --accent: 124 196 240; /* #7CC4F0 */
+  --link: 10 94 150; /* biru tua agar terbaca di latar putih (6.9:1) */
+  color-scheme: light;
+}
+
+.dark {
+  --bg: 10 10 10; /* #0A0A0A */
+  --fg: 255 255 255;
+  --muted: 161 161 170;
+  --surface: 22 24 28;
+  --card: 18 19 22;
+  --line: 48 51 58;
+  --primary: 168 216 245;
+  --accent: 124 196 240;
+  --link: 124 196 240;
+  color-scheme: dark;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-bg font-body text-fg antialiased;
+    min-height: 100dvh;
+  }
+  /* Tautan anchor tidak tertutup navbar sticky */
+  [id] {
+    scroll-margin-top: 5.5rem;
+  }
+  ::selection {
+    background: rgb(var(--accent) / 0.55);
+    color: inherit;
+  }
+  :focus-visible {
+    outline: 3px solid rgb(var(--accent));
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+}
+
+@layer components {
+  .container-page {
+    @apply mx-auto w-full max-w-6xl px-5 sm:px-8;
+  }
+
+  /* Judul section: besar, tebal, kapital, rapat */
+  .h-display {
+    @apply font-display uppercase leading-[0.95] tracking-tight;
+  }
+
+  /* Label kecil kapital dengan letter-spacing lebar (gaya navigasi) */
+  .eyebrow {
+    @apply text-xs font-bold uppercase tracking-nav text-muted;
+  }
+
+  /*
+   * TOMBOL
+   * Normal : biru muda + teks hitam
+   * Ditekan: latar hitam + teks putih (mode gelap: tambah garis putih agar tetap kontras di latar gelap)
+   */
+  .btn {
+    @apply inline-flex select-none items-center justify-center gap-2 rounded-full border-2 border-transparent bg-primary px-6 py-3 text-xs font-bold uppercase tracking-nav text-ink no-underline shadow-sm transition duration-200 ease-out;
+    @apply hover:-translate-y-0.5 hover:bg-accent hover:shadow-md;
+    @apply active:translate-y-0 active:scale-[0.97] active:bg-ink active:text-white active:shadow-none;
+    @apply dark:active:border-white;
+    @apply disabled:pointer-events-none disabled:opacity-50;
+    min-height: 44px;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .btn-outline {
+    @apply border-fg bg-transparent text-fg shadow-none;
+    @apply hover:bg-primary hover:text-ink;
+    @apply active:bg-ink active:text-white dark:active:border-white;
+  }
+  .btn-danger {
+    @apply border-red-700 bg-transparent text-red-700 shadow-none dark:border-red-400 dark:text-red-400;
+    @apply hover:bg-red-700 hover:text-white dark:hover:bg-red-400 dark:hover:text-ink;
+    @apply active:bg-ink active:text-white dark:active:border-white;
+  }
+  .btn-sm {
+    @apply px-4 py-2 text-[0.7rem];
+    min-height: 40px;
+  }
+
+  /* Tautan teks dengan garis bawah animasi */
+  .link-anim {
+    @apply relative text-link no-underline;
+    background-image: linear-gradient(currentColor, currentColor);
+    background-size: 0% 2px;
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    transition: background-size 0.25s ease;
+  }
+  .link-anim:hover {
+    background-size: 100% 2px;
+  }
+
+  .badge {
+    @apply inline-flex items-center rounded-full bg-primary px-3 py-1 text-[0.68rem] font-bold uppercase tracking-wideish text-ink;
+  }
+
+  .card {
+    @apply rounded-3xl border border-line bg-card;
+  }
+
+  /* Form */
+  .field-label {
+    @apply mb-1.5 block text-xs font-bold uppercase tracking-wideish text-fg;
+  }
+  .field {
+    @apply w-full rounded-2xl border-2 border-line bg-bg px-4 py-3 text-base text-fg placeholder:text-muted transition focus:border-accent focus:outline-none;
+    min-height: 48px;
+  }
+  .field[aria-invalid="true"] {
+    @apply border-red-600 dark:border-red-400;
+  }
+  .field-error {
+    @apply mt-1.5 text-sm font-semibold text-red-700 dark:text-red-300;
+  }
+
+  /* Teks Firman (HTML hasil sanitasi) */
+  .prose-firman {
+    @apply text-base leading-relaxed text-fg;
+  }
+  .prose-firman p {
+    @apply my-3;
+  }
+  .prose-firman h3,
+  .prose-firman h4 {
+    @apply mb-1 mt-5 font-display text-2xl uppercase tracking-tight;
+  }
+  .prose-firman ul {
+    @apply my-3 list-disc pl-6;
+  }
+  .prose-firman ol {
+    @apply my-3 list-decimal pl-6;
+  }
+  .prose-firman blockquote {
+    @apply my-4 rounded-r-2xl border-l-4 border-accent bg-surface px-4 py-3 italic;
+  }
+}
+
+/* ---------- Marquee ---------- */
+.marquee-track {
+  display: flex;
+  width: max-content;
+}
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none !important;
+  }
+}
+
+/* ---------- Transisi halus saat ganti mode terang/gelap ---------- */
+.theme-anim,
+.theme-anim *,
+.theme-anim *::before,
+.theme-anim *::after {
+  transition:
+    background-color 0.4s ease,
+    color 0.4s ease,
+    border-color 0.4s ease,
+    fill 0.4s ease,
+    stroke 0.4s ease !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  .theme-anim,
+  .theme-anim *,
+  .theme-anim *::before,
+  .theme-anim *::after {
+    transition: none !important;
+  }
+}
+
+/* Editor teks kaya */
+.rte:empty::before {
+  content: attr(data-placeholder);
+  color: rgb(var(--muted));
+  pointer-events: none;
+}
